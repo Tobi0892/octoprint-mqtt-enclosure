@@ -1,6 +1,7 @@
 from classes.DHT22 import DHT22
 from classes.MQTT import MQTT
 from classes.LOG import LOG
+from classes.OCTOPRINT import OCTOPRINT
 
 
 # CONFIG
@@ -13,7 +14,9 @@ MQTT_topic = "octoprint"
 MQTT_retain = True
 MQTT_qos = 1
 MQTT_message = {
-    "enclosure" : None
+    "enclosure": None,
+    "job": None,
+    "printer": None
 }
 LOG_file = "/home/pi/octoprint-mqtt-enclosure/logs/data.log"
 
@@ -21,6 +24,12 @@ LOG_file = "/home/pi/octoprint-mqtt-enclosure/logs/data.log"
 # Get DHT22 sensor data
 DHT22 = DHT22()
 MQTT_message["enclosure"] = DHT22.read(4)
+DHT22.cleanup()
+
+# Get Octoprint data
+OCTOPRINT = OCTOPRINT()
+MQTT_message["job"] = OCTOPRINT.getJob()
+MQTT_message["printer"] = OCTOPRINT.getPrinter()
 
 # Log data
 LOG = LOG(LOG_file)
