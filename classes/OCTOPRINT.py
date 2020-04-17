@@ -39,15 +39,17 @@ class OCTOPRINT:
 
     @staticmethod
     def formatSeconds(seconds):
-        h = seconds // 3600
-        m = (seconds % 3600) // 60
+        if seconds is not None:
+            h = seconds // 3600
+            m = (seconds % 3600) // 60
 
-        return "%02d:%02d" % (h, m)
-
-    @staticmethod
-    def calculateCompletion(remaining):
-        if remaining != 0:
-            return (datetime.now() + timedelta(seconds=remaining)).strftime('%H:%M')
+            return "%02d:%02d" % (h, m)
         else:
             return "00:00"
 
+    @staticmethod
+    def calculateCompletion(remaining):
+        if remaining != 0 and remaining is not None:
+            return (datetime.now() + timedelta(seconds=remaining)).strftime('%H:%M')
+        else:
+            return "00:00"
