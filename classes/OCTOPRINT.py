@@ -19,22 +19,22 @@ class OCTOPRINT:
         job = self.request("job")
 
         return {
-            "file": job["job"]["file"]["name"],
-            "percent": float("{:.1f}".format(job["progress"]["completion"])),
+            "file": self.formatText(job["job"]["file"]["name"]),
+            "percent": self.formatNumber(job["progress"]["completion"]),
             "elapsed": self.formatSeconds(job["progress"]["printTime"]),
             "remaining": self.formatSeconds(job["progress"]["printTimeLeft"]),
             "completion": self.calculateCompletion(job["progress"]["printTimeLeft"]),
-            "state": job["state"]
+            "state": self.formatText(job["state"])
         }
 
     def getPrinter(self):
         printer = self.request("printer")
 
         return {
-            "hotendActual": float("{:.1f}".format(printer["temperature"]["tool0"]["actual"])),
-            "hotendTarget": float("{:.1f}".format(printer["temperature"]["tool0"]["target"])),
-            "bedActual": float("{:.1f}".format(printer["temperature"]["bed"]["actual"])),
-            "bedTarget": float("{:.1f}".format(printer["temperature"]["bed"]["target"])),
+            "hotendActual": self.formatNumber(printer["temperature"]["tool0"]["actual"]),
+            "hotendTarget": self.formatNumber(printer["temperature"]["tool0"]["target"]),
+            "bedActual": self.formatNumber(printer["temperature"]["bed"]["actual"]),
+            "bedTarget": self.formatNumber(printer["temperature"]["bed"]["target"]),
         }
 
     @staticmethod
@@ -46,6 +46,20 @@ class OCTOPRINT:
             return "%02d:%02d" % (h, m)
         else:
             return "00:00"
+
+    @staticmethod
+    def formatNumber(number):
+        if number is not None:
+            return float("{:.1f}".format(number))
+        else:
+            return "0.0"
+
+    @staticmethod
+    def formatText(text):
+        if text is not None:
+            return text
+        else:
+            return ""
 
     @staticmethod
     def calculateCompletion(remaining):
