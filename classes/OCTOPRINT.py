@@ -13,29 +13,39 @@ class OCTOPRINT:
         response = requests.request("GET", "http://" + self.host + "/api/" + api,
                                     headers={'X-Api-Key': self.apikey}
                                     )
-        return json.loads(response.text)
+
+        if response.status_code == 200:
+            return json.loads(response.text)
+        else:
+            return False
 
     def getJob(self):
         job = self.request("job")
 
-        return {
-            "file": self.formatText(job["job"]["file"]["name"]),
-            "percent": self.formatNumber(job["progress"]["completion"]),
-            "elapsed": self.formatSeconds(job["progress"]["printTime"]),
-            "remaining": self.formatSeconds(job["progress"]["printTimeLeft"]),
-            "completion": self.calculateCompletion(job["progress"]["printTimeLeft"]),
-            "state": self.formatText(job["state"])
-        }
+        if job:
+            return {
+                "file": self.formatText(job["job"]["file"]["name"]),
+                "percent": self.formatNumber(job["progress"]["completion"]),
+                "elapsed": self.formatSeconds(job["progress"]["printTime"]),
+                "remaining": self.formatSeconds(job["progress"]["printTimeLeft"]),
+                "completion": self.calculateCompletion(job["progress"]["printTimeLeft"]),
+                "state": self.formatStatus(job["state"])
+            }
+        else:
+            return ""
 
     def getPrinter(self):
         printer = self.request("printer")
 
-        return {
-            "hotendActual": self.formatNumber(printer["temperature"]["tool0"]["actual"]),
-            "hotendTarget": self.formatNumber(printer["temperature"]["tool0"]["target"]),
-            "bedActual": self.formatNumber(printer["temperature"]["bed"]["actual"]),
-            "bedTarget": self.formatNumber(printer["temperature"]["bed"]["target"]),
-        }
+        if printer:
+            return {
+                "hotendActual": self.formatNumber(printer["temperature"]["tool0"]["actual"]),
+                "hotendTarget": self.formatNumber(printer["temperature"]["tool0"]["target"]),
+                "bedActual": self.formatNumber(printer["temperature"]["bed"]["actual"]),
+                "bedTarget": self.formatNumber(printer["temperature"]["bed"]["target"]),
+            }
+        else:
+            return ""
 
     @staticmethod
     def formatSeconds(seconds):
@@ -60,6 +70,13 @@ class OCTOPRINT:
             return text
         else:
             return ""
+
+    @staticmethod
+    def formatStatus(status):
+        if status[:7] == "Offline":
+            return "Offline"
+        else:
+            return status
 
     @staticmethod
     def calculateCompletion(remaining):
