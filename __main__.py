@@ -16,7 +16,8 @@ MQTT_retain = True
 MQTT_qos = 1
 MQTT_message = {
     "enclosure": None,
-    "filament": None,
+    "filament1": None,
+    "filament2": None,
     "job": None,
     "printer": None
 }
@@ -25,8 +26,9 @@ LOG_file = "/home/pi/octoprint-mqtt-enclosure/logs/data.log"
 
 # Get DHT22 sensor data
 DHT22 = DHT22()
-MQTT_message["enclosure"] = DHT22.read(4)
-MQTT_message["filament"] = DHT22.read(27)
+MQTT_message["enclosure"] = DHT22.read(4, 17)
+MQTT_message["filament1"] = DHT22.read(10, 9) # gelb grün blau
+MQTT_message["filament2"] = DHT22.read(27, 22) # braun rot orange
 DHT22.cleanup()
 
 # Get CCS811 sensor data

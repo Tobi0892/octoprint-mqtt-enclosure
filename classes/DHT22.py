@@ -7,12 +7,12 @@ class DHT22:
 
     def __init__(self):
         self.retries = 0
-        GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
-        GPIO.setup(11, GPIO.OUT, initial=GPIO.HIGH) # GPIO 17
-
-    def read(self, pin):
-        humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.AM2302, pin)
+        
+    def read(self, data, power):
+        GPIO.setup(power, GPIO.OUT, initial=GPIO.HIGH)
+        humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.AM2302, data)
 
         if humidity is not None and temperature is not None:
             return {
@@ -26,7 +26,7 @@ class DHT22:
             if self.retries < 5:
                 print("Reading faild, retry " + str(self.retries))
                 sleep(2)
-                self.read(self, pin)
+                self.read(data, power)
 
     @staticmethod
     def cleanup():
