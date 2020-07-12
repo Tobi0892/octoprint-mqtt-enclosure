@@ -29,7 +29,8 @@ DHT22 = DHT22()
 MQTT_message["enclosure"] = DHT22.read(4, 17)
 MQTT_message["filament1"] = DHT22.read(10, 9) # gelb grün blau
 MQTT_message["filament2"] = DHT22.read(27, 22) # braun rot orange
-MQTT_message["filament3"] = DHT22.read(5, 6) # braun rot orange
+MQTT_message["filament3"] = DHT22.read(5, 6) # ASA
+MQTT_message["filament4"] = DHT22.read(16, 26) # rot, braun, schwarz
 DHT22.cleanup()
 
 # Get CCS811 sensor data
