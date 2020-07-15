@@ -9,8 +9,8 @@ class OCTOPRINT:
         self.apikey = "935B41090E1842E1B3DC33D32918AE46"
         self.host = "localhost"
 
-    def request(self, api):
-        response = requests.request("GET", "http://" + self.host + "/api/" + api,
+    def request(self, path):
+        response = requests.request("GET", "http://" + self.host + path,
                                     headers={'X-Api-Key': self.apikey}
                                     )
 
@@ -20,7 +20,7 @@ class OCTOPRINT:
             return False
 
     def getJob(self):
-        job = self.request("job")
+        job = self.request("/api/job")
 
         if job:
             return {
@@ -35,7 +35,7 @@ class OCTOPRINT:
             return ""
 
     def getPrinter(self):
-        printer = self.request("printer")
+        printer = self.request("/api/printer")
 
         if printer:
             return {
@@ -44,6 +44,20 @@ class OCTOPRINT:
                 "bedActual": self.formatNumber(printer["temperature"]["bed"]["actual"]),
                 "bedTarget": self.formatNumber(printer["temperature"]["bed"]["target"]),
             }
+        else:
+            return ""
+
+    def getSpools(self):
+        spools = self.request("/plugin/filamentmanager/spools")
+
+        if spools:
+            materials = {}
+            for spool in spools["spools"]:
+                if spool["profile"]["material"] not in materials:
+                    materials[spool["profile"]["material"]] = {}
+                materials[spool["profile"]["material"]][spool["name"]] = round(spool["weight"] - spool["used"])
+
+            return materials
         else:
             return ""
 

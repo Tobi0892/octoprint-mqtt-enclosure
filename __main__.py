@@ -19,7 +19,8 @@ MQTT_message = {
     "filament1": None,
     "filament2": None,
     "job": None,
-    "printer": None
+    "printer": None,
+    "spools": None
 }
 LOG_file = "/home/pi/octoprint-mqtt-enclosure/logs/data.log"
 
@@ -47,6 +48,7 @@ MQTT_message["enclosure"].update(
 OCTOPRINT = OCTOPRINT()
 MQTT_message["job"] = OCTOPRINT.getJob()
 MQTT_message["printer"] = OCTOPRINT.getPrinter()
+MQTT_message["spools"] = OCTOPRINT.getSpools()
 
 # Log data
 LOG = LOG(LOG_file)
