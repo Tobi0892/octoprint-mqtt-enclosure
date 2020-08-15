@@ -13,3 +13,5 @@ https://pimylifeup.com/raspberry-pi-humidity-sensor-dht22/
 ## Connect all DHT22 sensors to 
 - a single GND
 - for the data and power pins you are free to choose, see `__main__.py` i.e. ``DHT22.read(4, 6)`` (data, power)
+
+![lovelace_details](image/HA.png)
